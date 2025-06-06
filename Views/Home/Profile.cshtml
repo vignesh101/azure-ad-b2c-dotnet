@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Profile";
+    var userClaims = ViewData["UserClaims"] as Dictionary<string, string>;
+}
+
+<div class="text-center">
+    <h1 class="display-4">User Profile</h1>
+    <p>Welcome to your profile page.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>User Information</h2>
+        
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>Basic Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @User.Identity?.Name</p>
+                    <p><strong>Authentication Type:</strong> @User.Identity?.AuthenticationType</p>
+                    <p><strong>Is Authenticated:</strong> @User.Identity?.IsAuthenticated</p>
+                </div>
+            </div>
+
+            @if (userClaims != null && userClaims.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>User Claims</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Claim Type</th>
+                                        <th>Claim Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var claim in userClaims)
+                                    {
+                                        <tr>
+                                            <td>@claim.Key</td>
+                                            <td>@claim.Value</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <h4>Not Authenticated</h4>
+                <p>You need to sign in to view your profile.</p>
+                <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn" class="btn btn-primary">Sign In</a>
+            </div>
+        }
+    </div>
+</div>
